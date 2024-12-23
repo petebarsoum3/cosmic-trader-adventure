@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import { Shield, Zap, Target, AlertTriangle } from "lucide-react";
 
 const Landing = () => {
   return (
@@ -9,54 +10,100 @@ const Landing = () => {
         <div className="grid gap-8 md:grid-cols-2 items-center">
           <div className="space-y-6">
             <h1 className="text-5xl font-bold bg-gradient-to-r from-cyber-primary to-cyber-secondary bg-clip-text text-transparent">
-              Advanced Trading Bot
+              Protect Your Investments from Scam Coins
             </h1>
             <p className="text-xl text-gray-300">
-              Experience automated trading with our cutting-edge AI technology. 
-              Maximize your profits while minimizing risks.
+              Advanced meme coin sniping bot that detects and prevents scam tokens before they can harm investors
             </p>
             <div className="space-x-4">
               <Button asChild className="cyber-button">
-                <Link to="/dashboard">Get Started</Link>
+                <Link to="/dashboard">Launch App</Link>
               </Button>
               <Button asChild variant="outline">
                 <Link to="/documentation">Learn More</Link>
               </Button>
             </div>
           </div>
-          <div className="relative">
-            <img
-              src="https://images.unsplash.com/photo-1488590528505-98d2b5aba04b"
-              alt="Trading Dashboard"
-              className="rounded-lg shadow-2xl"
-            />
-            <div className="absolute inset-0 bg-gradient-to-r from-cyber-primary/10 to-cyber-secondary/10 rounded-lg" />
+          <div className="cyber-card p-8">
+            <div className="space-y-4">
+              <h3 className="text-xl font-bold">Profit Calculator</h3>
+              <div className="relative">
+                <span className="absolute left-3 top-2 text-gray-400">$</span>
+                <input
+                  type="number"
+                  className="cyber-input pl-8 w-full"
+                  placeholder="Enter investment amount"
+                />
+              </div>
+              <div className="p-4 bg-black/20 rounded-lg">
+                <p className="text-sm text-gray-400">Estimated profit in 30 days:</p>
+                <p className="text-2xl font-bold text-cyber-primary">$0</p>
+                <p className="text-xs text-gray-400">Based on our average daily return of 17%</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Stats Section */}
+      <section className="container mx-auto px-4 py-12">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          <div className="cyber-card">
+            <h3 className="text-3xl font-bold text-cyber-primary">15,482</h3>
+            <p className="text-sm text-gray-400">Scams Prevented</p>
+          </div>
+          <div className="cyber-card">
+            <h3 className="text-3xl font-bold text-cyber-secondary">892,341</h3>
+            <p className="text-sm text-gray-400">Protected Value</p>
+          </div>
+          <div className="cyber-card">
+            <h3 className="text-3xl font-bold text-cyber-accent">3,219</h3>
+            <p className="text-sm text-gray-400">Active Users</p>
+          </div>
+          <div className="cyber-card">
+            <h3 className="text-3xl font-bold text-cyber-primary">99%</h3>
+            <p className="text-sm text-gray-400">Success Rate</p>
           </div>
         </div>
       </section>
 
       {/* Features Section */}
       <section className="container mx-auto px-4 py-20">
-        <h2 className="text-3xl font-bold text-center mb-12">Key Features</h2>
-        <div className="grid gap-8 md:grid-cols-3">
+        <h2 className="text-3xl font-bold text-center mb-12">Advanced Protection Features</h2>
+        <div className="grid md:grid-cols-4 gap-8">
           <div className="cyber-card">
-            <h3 className="text-xl font-bold mb-4">AI-Powered Trading</h3>
-            <p className="text-gray-300">
-              Our advanced algorithms analyze market trends and execute trades automatically.
-            </p>
+            <Shield className="w-12 h-12 text-cyber-primary mb-4" />
+            <h3 className="text-xl font-bold mb-2">Real-time Scam Detection</h3>
+            <p className="text-gray-400">Advanced algorithms detect malicious token contracts instantly</p>
           </div>
           <div className="cyber-card">
-            <h3 className="text-xl font-bold mb-4">Risk Management</h3>
-            <p className="text-gray-300">
-              Built-in safeguards and stop-loss mechanisms protect your investments.
-            </p>
+            <Zap className="w-12 h-12 text-cyber-secondary mb-4" />
+            <h3 className="text-xl font-bold mb-2">Lightning Fast Analysis</h3>
+            <p className="text-gray-400">Analyze token contracts in milliseconds before they can cause harm</p>
           </div>
           <div className="cyber-card">
-            <h3 className="text-xl font-bold mb-4">24/7 Operation</h3>
-            <p className="text-gray-300">
-              Never miss a trading opportunity with round-the-clock automated trading.
-            </p>
+            <Target className="w-12 h-12 text-cyber-accent mb-4" />
+            <h3 className="text-xl font-bold mb-2">Precision Sniping</h3>
+            <p className="text-gray-400">Execute trades with perfect timing on legitimate opportunities</p>
           </div>
+          <div className="cyber-card">
+            <AlertTriangle className="w-12 h-12 text-cyber-primary mb-4" />
+            <h3 className="text-xl font-bold mb-2">Risk Assessment</h3>
+            <p className="text-gray-400">Comprehensive risk scoring system for all new tokens</p>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="container mx-auto px-4 py-20">
+        <div className="cyber-card text-center">
+          <h2 className="text-3xl font-bold mb-4">Ready to Trade Safely?</h2>
+          <p className="text-xl text-gray-400 mb-8">
+            Join thousands of traders who trust our bot to protect their investments
+          </p>
+          <Button asChild className="cyber-button">
+            <Link to="/dashboard">Get Started Now</Link>
+          </Button>
         </div>
       </section>
     </div>

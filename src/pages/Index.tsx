@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { WalletCard } from "@/components/WalletCard";
 import { TraderLevel } from "@/components/TraderLevel";
 import { TradeHistory } from "@/components/TradeHistory";
@@ -7,11 +7,31 @@ import { Button } from "@/components/ui/button";
 import { useWallet } from "@/hooks/use-wallet";
 import { useToast } from "@/hooks/use-toast";
 import { PlusCircle, MinusCircle } from "lucide-react";
+import { AuthOverlay } from "@/components/AuthOverlay";
+import { supabase } from "@/integrations/supabase/client";
+import { useNavigate } from "react-router-dom";
 
 const Index = () => {
   const worker = useRef<Worker>();
   const { toast } = useToast();
   const wallet = useWallet();
+  const [showAuthOverlay, setShowAuthOverlay] = useState(false);
+  const [session, setSession] = useState<any>(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+    });
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   useEffect(() => {
     worker.current = new Worker(
@@ -28,6 +48,14 @@ const Index = () => {
 
     return () => worker.current?.terminate();
   }, []);
+
+  const handleAction = (action: () => void) => {
+    if (!session) {
+      setShowAuthOverlay(true);
+      return;
+    }
+    action();
+  };
 
   const handleDeposit = () => {
     const amount = Number(prompt('Enter deposit amount:'));
@@ -80,11 +108,11 @@ const Index = () => {
       </div>
       
       <div className="flex gap-4 mb-6">
-        <Button onClick={handleDeposit} className="cyber-button flex-1">
+        <Button onClick={() => handleAction(handleDeposit)} className="cyber-button flex-1">
           <PlusCircle className="w-4 h-4 mr-2" />
           Deposit
         </Button>
-        <Button onClick={handleWithdraw} className="cyber-button flex-1">
+        <Button onClick={() => handleAction(handleWithdraw)} className="cyber-button flex-1">
           <MinusCircle className="w-4 h-4 mr-2" />
           Withdraw
         </Button>
@@ -93,12 +121,17 @@ const Index = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <BotControl
           allocatedFunds={wallet.allocatedFunds}
-          onAllocate={wallet.allocate}
-          onStart={handleStartBot}
-          onStop={handleStopBot}
+          onAllocate={(amount) => handleAction(() => wallet.allocate(amount))}
+          onStart={() => handleAction(handleStartBot)}
+          onStop={() => handleAction(handleStopBot)}
         />
         <TradeHistory trades={wallet.trades} />
       </div>
+
+      <AuthOverlay 
+        isOpen={showAuthOverlay} 
+        onClose={() => setShowAuthOverlay(false)} 
+      />
     </div>
   );
 };

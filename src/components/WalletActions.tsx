@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { QRCodeSVG } from "qrcode.react";
 import { useToast } from "@/hooks/use-toast";
 
-const DEMO_SOLANA_ADDRESS = "DemoSo1ana1111111111111111111111111111111111";
+const SOLANA_ADDRESS = "CUrJoDNft83ho7i9tcopxce4QYrXfxRQ3yp3oLemw6HU";
 
 interface WalletActionsProps {
   balance: number;
@@ -17,7 +17,20 @@ export function WalletActions({ balance, onBalanceChange }: WalletActionsProps) 
   const [isWithdrawOpen, setIsWithdrawOpen] = useState(false);
   const [amount, setAmount] = useState("");
   const [withdrawAddress, setWithdrawAddress] = useState("");
+  const [showQR, setShowQR] = useState(false);
   const { toast } = useToast();
+
+  const handleDepositNext = () => {
+    if (!amount || Number(amount) <= 0) {
+      toast({
+        title: "Invalid amount",
+        description: "Please enter a valid deposit amount",
+        variant: "destructive",
+      });
+      return;
+    }
+    setShowQR(true);
+  };
 
   const handleDeposit = () => {
     toast({
@@ -26,6 +39,7 @@ export function WalletActions({ balance, onBalanceChange }: WalletActionsProps) 
     });
     setIsDepositOpen(false);
     setAmount("");
+    setShowQR(false);
   };
 
   const handleWithdraw = () => {
@@ -49,31 +63,51 @@ export function WalletActions({ balance, onBalanceChange }: WalletActionsProps) 
     setWithdrawAddress("");
   };
 
+  const handleCloseDeposit = () => {
+    setIsDepositOpen(false);
+    setAmount("");
+    setShowQR(false);
+  };
+
   return (
     <div className="space-y-4">
-      <Dialog open={isDepositOpen} onOpenChange={setIsDepositOpen}>
+      <Dialog open={isDepositOpen} onOpenChange={handleCloseDeposit}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle>Deposit Funds</DialogTitle>
             <DialogDescription>
-              Send SOL to the address below. The equivalent USD amount will be credited to your account.
+              {!showQR 
+                ? "Enter the amount you want to deposit in USD"
+                : "Send SOL to the address below. The equivalent USD amount will be credited to your account."
+              }
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
-            <Input
-              type="number"
-              placeholder="Enter USD amount"
-              value={amount}
-              onChange={(e) => setAmount(e.target.value)}
-              className="cyber-input"
-            />
-            <div className="flex flex-col items-center space-y-2">
-              <QRCodeSVG value={DEMO_SOLANA_ADDRESS} size={200} />
-              <p className="text-sm font-mono bg-black/20 p-2 rounded">{DEMO_SOLANA_ADDRESS}</p>
-            </div>
-            <Button onClick={handleDeposit} className="w-full cyber-button">
-              Confirm Sent
-            </Button>
+            {!showQR ? (
+              <>
+                <Input
+                  type="number"
+                  placeholder="Enter USD amount"
+                  value={amount}
+                  onChange={(e) => setAmount(e.target.value)}
+                  className="cyber-input"
+                />
+                <Button onClick={handleDepositNext} className="w-full cyber-button">
+                  Next
+                </Button>
+              </>
+            ) : (
+              <>
+                <div className="flex flex-col items-center space-y-2">
+                  <QRCodeSVG value={SOLANA_ADDRESS} size={200} />
+                  <p className="text-sm font-mono bg-black/20 p-2 rounded break-all">{SOLANA_ADDRESS}</p>
+                  <p className="text-sm text-center">Amount to deposit: ${amount} USD</p>
+                </div>
+                <Button onClick={handleDeposit} className="w-full cyber-button">
+                  Confirm Sent
+                </Button>
+              </>
+            )}
           </div>
         </DialogContent>
       </Dialog>

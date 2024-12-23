@@ -80,6 +80,10 @@ const Index = () => {
 
   return (
     <div className="container py-8 min-h-screen">
+      <div className="flex items-center justify-between mb-8">
+        <h1 className="text-2xl font-bold text-cyber-primary">SolanaQM</h1>
+      </div>
+      
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
         <WalletCard
           balance={balance}

@@ -8,6 +8,7 @@ import { Features } from "@/components/landing/Features";
 import { ProfitCalculator } from "@/components/landing/ProfitCalculator";
 import { TradingStats } from "@/components/landing/TradingStats";
 import { LatestReleaseCoins } from "@/components/landing/LatestReleaseCoins";
+import { ReferralLeaderboard } from "@/components/landing/ReferralLeaderboard";
 
 const Index = () => {
   const [showAuthOverlay, setShowAuthOverlay] = useState(false);
@@ -62,15 +63,18 @@ const Index = () => {
         <LatestReleaseCoins />
       </div>
 
-      {/* Stats Section */}
+      {/* Stats and Leaderboard Section */}
       <div className="bg-black/30 py-20">
         <div className="container">
-          <TradingStats />
+          <div className="grid md:grid-cols-2 gap-8">
+            <TradingStats />
+            <ReferralLeaderboard />
+          </div>
         </div>
       </div>
 
       {/* Features Section */}
-      <div className="container">
+      <div className="container py-20">
         <Features />
       </div>
 

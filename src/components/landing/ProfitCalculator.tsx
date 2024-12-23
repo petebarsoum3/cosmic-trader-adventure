@@ -3,6 +3,7 @@ import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
 import { motion } from "framer-motion";
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
+import { Calculator } from "lucide-react";
 
 export function ProfitCalculator() {
   const [investment, setInvestment] = useState<number>(1000);
@@ -31,7 +32,11 @@ export function ProfitCalculator() {
       transition={{ delay: 0.4 }}
       className="cyber-card"
     >
-      <h3 className="text-2xl font-bold mb-6 text-cyber-primary">Profit Calculator</h3>
+      <div className="flex items-center gap-2 mb-6">
+        <Calculator className="w-6 h-6 text-cyber-primary" />
+        <h3 className="text-2xl font-bold">Profit Calculator</h3>
+      </div>
+
       <div className="space-y-6">
         <div>
           <label className="block text-sm mb-2">Investment Amount (USDT)</label>
@@ -42,8 +47,9 @@ export function ProfitCalculator() {
             className="cyber-input"
           />
         </div>
+        
         <div>
-          <label className="block text-sm mb-2">Leverage (1-10x)</label>
+          <label className="block text-sm mb-2">Leverage ({leverage}x)</label>
           <Slider
             value={[leverage]}
             onValueChange={(value) => setLeverage(value[0])}
@@ -52,7 +58,6 @@ export function ProfitCalculator() {
             step={1}
             className="cyber-slider"
           />
-          <span className="block text-right text-sm mt-1">{leverage}x</span>
         </div>
         
         <div className="h-[200px] w-full">
@@ -88,12 +93,17 @@ export function ProfitCalculator() {
           </ResponsiveContainer>
         </div>
 
-        <div className="p-4 rounded-lg bg-black/30 border border-cyber-primary/20">
-          <p className="text-sm text-gray-400">24-Hour Potential Profit:</p>
-          <p className="text-3xl font-bold text-cyber-primary">
-            ${hourlyProfits[23]?.profit.toLocaleString() || 0}
-          </p>
-          <p className="text-xs text-gray-500 mt-2">Based on 17% hourly return</p>
+        <div className="grid grid-cols-2 gap-4">
+          <div className="p-4 rounded-lg bg-black/30 border border-cyber-primary/20">
+            <p className="text-sm text-gray-400">Hourly Return</p>
+            <p className="text-2xl font-bold text-cyber-primary">17%</p>
+          </div>
+          <div className="p-4 rounded-lg bg-black/30 border border-cyber-primary/20">
+            <p className="text-sm text-gray-400">24h Potential</p>
+            <p className="text-2xl font-bold text-cyber-primary">
+              ${hourlyProfits[23]?.profit.toLocaleString() || 0}
+            </p>
+          </div>
         </div>
       </div>
     </motion.div>

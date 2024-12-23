@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
@@ -14,6 +14,14 @@ interface BotControlProps {
 export function BotControl({ allocatedFunds, onAllocate, onStart, onStop }: BotControlProps) {
   const [isRunning, setIsRunning] = useState(false);
   const [leverage, setLeverage] = useState(1);
+  const [dailyProfit, setDailyProfit] = useState(0);
+
+  useEffect(() => {
+    // Calculate estimated daily profit based on allocated funds and leverage
+    const profitRate = 0.01; // 1% daily profit rate
+    const estimatedProfit = allocatedFunds * leverage * profitRate;
+    setDailyProfit(estimatedProfit);
+  }, [allocatedFunds, leverage]);
 
   const handleStart = () => {
     if (allocatedFunds <= 0) {
@@ -57,6 +65,18 @@ export function BotControl({ allocatedFunds, onAllocate, onStart, onStop }: BotC
             step={1}
             className="cyber-slider"
           />
+        </div>
+        <div className="p-4 rounded-lg bg-black/20 space-y-2">
+          <div className="flex justify-between">
+            <span className="text-sm text-muted-foreground">Estimated Daily Profit:</span>
+            <span className="text-sm font-bold text-cyber-primary">${dailyProfit.toFixed(2)}</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-sm text-muted-foreground">Total Position Size:</span>
+            <span className="text-sm font-bold text-cyber-secondary">
+              ${(allocatedFunds * leverage).toFixed(2)}
+            </span>
+          </div>
         </div>
         <div className="flex gap-2">
           <Button

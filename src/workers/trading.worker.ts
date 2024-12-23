@@ -14,6 +14,15 @@ const generateRandomTrade = () => {
   };
 };
 
+const stopTrading = () => {
+  isRunning = false;
+  if (tradeInterval) {
+    clearInterval(tradeInterval);
+    tradeInterval = null;
+  }
+  self.postMessage({ type: 'BOT_STOPPED' });
+};
+
 self.onmessage = (e) => {
   const { type } = e.data;
   
@@ -27,15 +36,12 @@ self.onmessage = (e) => {
             self.postMessage({ type: 'NEW_TRADE', trade });
           }
         }, 5000);
+        self.postMessage({ type: 'BOT_STARTED' });
       }
       break;
       
     case 'STOP':
-      isRunning = false;
-      if (tradeInterval) {
-        clearInterval(tradeInterval);
-        tradeInterval = null;
-      }
+      stopTrading();
       break;
   }
 };

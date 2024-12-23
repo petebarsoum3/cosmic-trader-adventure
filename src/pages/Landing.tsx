@@ -6,6 +6,7 @@ import { ProfitCalculator } from "@/components/landing/ProfitCalculator";
 import { Stats } from "@/components/landing/Stats";
 import { ReferralCompetition } from "@/components/landing/ReferralCompetition";
 import { TopEarnersLeaderboard } from "@/components/landing/TopEarnersLeaderboard";
+import { ScamPreventionDemo } from "@/components/landing/ScamPreventionDemo";
 
 const Landing = () => {
   const [showAuthOverlay, setShowAuthOverlay] = useState(false);
@@ -44,6 +45,9 @@ const Landing = () => {
       </section>
 
       <Stats />
+
+      {/* Scam Prevention Demo Section */}
+      <ScamPreventionDemo />
 
       {/* Referral Competition Section */}
       <section className="container mx-auto px-4 py-12">

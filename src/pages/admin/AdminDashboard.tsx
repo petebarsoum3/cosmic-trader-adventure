@@ -1,7 +1,21 @@
 import { Card } from "@/components/ui/card";
 import { AdminLayout } from "@/components/admin/AdminLayout";
+import { useSession } from "@supabase/auth-helpers-react";
+import { Navigate } from "react-router-dom";
 
 const AdminDashboard = () => {
+  const session = useSession();
+  
+  // Check if user is authenticated and is admin
+  if (!session) {
+    return <Navigate to="/login" replace />;
+  }
+  
+  const isAdmin = session.user?.user_metadata?.role === 'admin';
+  if (!isAdmin) {
+    return <Navigate to="/app" replace />;
+  }
+
   return (
     <AdminLayout>
       <div className="space-y-6">

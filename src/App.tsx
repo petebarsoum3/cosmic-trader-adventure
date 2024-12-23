@@ -9,6 +9,7 @@ import Index from "./pages/Index";
 import Landing from "./pages/Landing";
 import Documentation from "./pages/Documentation";
 import AdminDashboard from "./pages/admin/AdminDashboard";
+import Login from "./pages/Login";
 
 const queryClient = new QueryClient();
 
@@ -24,6 +25,7 @@ const App = () => (
             <Route path="/documentation" element={<Documentation />} />
             <Route path="/app" element={<Index />} />
             <Route path="/admin" element={<AdminDashboard />} />
+            <Route path="/login" element={<Login />} />
           </Routes>
         </BrowserRouter>
       </TooltipProvider>

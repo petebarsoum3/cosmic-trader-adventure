@@ -188,6 +188,12 @@ export type Database = {
           referral_count: number
         }[]
       }
+      make_user_admin: {
+        Args: {
+          user_email: string
+        }
+        Returns: undefined
+      }
     }
     Enums: {
       [_ in never]: never

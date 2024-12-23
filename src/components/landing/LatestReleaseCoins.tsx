@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { connect } from "https://cdn.jsdelivr.net/npm/nats.ws@latest/esm/nats.js";
+import { connect } from "nats.ws";
 import { motion, AnimatePresence } from "framer-motion";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
@@ -101,7 +101,7 @@ export function LatestReleaseCoins() {
     >
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-xl font-bold text-cyber-primary">Latest Release Coins</h3>
-        <Badge variant={isConnected ? "success" : "destructive"}>
+        <Badge variant={isConnected ? "secondary" : "destructive"}>
           {isConnected ? "Live" : "Disconnected"}
         </Badge>
       </div>

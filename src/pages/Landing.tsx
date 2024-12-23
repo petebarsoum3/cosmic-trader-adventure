@@ -1,23 +1,84 @@
 import { Button } from "@/components/ui/button";
-import { Link, useNavigate } from "react-router-dom";
-import { Shield, Zap, Target, AlertTriangle } from "lucide-react";
-import { ProfitCalculator } from "@/components/landing/ProfitCalculator";
-import { ReferralCompetition } from "@/components/landing/ReferralCompetition";
-import { useEffect } from "react";
+import { Link } from "react-router-dom";
+import { Shield, Zap, Target, AlertTriangle, Timer, Trophy, Users } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Input } from "@/components/ui/input";
+import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 
 const Landing = () => {
-  const navigate = useNavigate();
+  const [investment, setInvestment] = useState<number>(0);
+  const [profit, setProfit] = useState<number>(0);
+  const [timeLeft, setTimeLeft] = useState<number>(0);
+  const [referralCode, setReferralCode] = useState<string>("");
+  const { toast } = useToast();
 
+  // Calculate time until January 1st
   useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if (session) {
-        navigate('/dashboard');
-      }
-    });
+    const targetDate = new Date('2025-01-01T00:00:00');
+    const updateTimer = () => {
+      const now = new Date();
+      const difference = targetDate.getTime() - now.getTime();
+      setTimeLeft(difference);
+    };
+    updateTimer();
+    const timer = setInterval(updateTimer, 1000);
+    return () => clearInterval(timer);
+  }, []);
 
-    return () => subscription.unsubscribe();
-  }, [navigate]);
+  // Calculate profit based on 7% daily return
+  useEffect(() => {
+    const dailyRate = 0.07; // 7% daily
+    const days = 30;
+    let total = investment;
+    for (let i = 0; i < days; i++) {
+      total += total * dailyRate;
+    }
+    setProfit(total - investment);
+  }, [investment]);
+
+  const generateReferralCode = async () => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        toast({
+          title: "Authentication Required",
+          description: "Please sign in to create a referral code",
+          variant: "destructive"
+        });
+        return;
+      }
+
+      const customCode = Math.random().toString(36).substring(2, 8).toUpperCase();
+      const { error } = await supabase.from('referrals').insert({
+        referrer_id: user.id,
+        referred_id: user.id, // Temporary, will be updated when used
+        custom_code: customCode
+      });
+
+      if (error) throw error;
+
+      setReferralCode(customCode);
+      toast({
+        title: "Success!",
+        description: "Your referral code has been created",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to generate referral code",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const formatTimeLeft = () => {
+    const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+    return `${days}d ${hours}h ${minutes}m ${seconds}s`;
+  };
 
   return (
     <div className="min-h-screen bg-cyber-background">
@@ -40,7 +101,25 @@ const Landing = () => {
               </Button>
             </div>
           </div>
-          <ProfitCalculator />
+          <div className="cyber-card p-8">
+            <div className="space-y-4">
+              <h3 className="text-xl font-bold">Profit Calculator</h3>
+              <div className="relative">
+                <span className="absolute left-3 top-2 text-gray-400">$</span>
+                <Input
+                  type="number"
+                  className="cyber-input pl-8 w-full"
+                  placeholder="Enter investment amount"
+                  onChange={(e) => setInvestment(Number(e.target.value))}
+                />
+              </div>
+              <div className="p-4 bg-black/20 rounded-lg">
+                <p className="text-sm text-gray-400">Estimated profit in 30 days:</p>
+                <p className="text-2xl font-bold text-cyber-primary">${profit.toFixed(2)}</p>
+                <p className="text-xs text-gray-400">Based on our average daily return of 7%</p>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -92,7 +171,50 @@ const Landing = () => {
         </div>
       </section>
 
-      <ReferralCompetition />
+      {/* Referral Competition Section */}
+      <section className="container mx-auto px-4 py-20 bg-gradient-to-r from-cyber-primary/10 to-cyber-secondary/10 rounded-3xl mb-20">
+        <div className="text-center space-y-8">
+          <div className="flex items-center justify-center gap-4">
+            <Trophy className="w-12 h-12 text-cyber-primary animate-pulse" />
+            <h2 className="text-4xl font-bold bg-gradient-to-r from-cyber-primary to-cyber-secondary bg-clip-text text-transparent">
+              $50,000 Referral Competition
+            </h2>
+          </div>
+          
+          <div className="flex items-center justify-center gap-4">
+            <Timer className="w-6 h-6 text-cyber-secondary" />
+            <p className="text-2xl font-mono text-cyber-secondary">
+              {formatTimeLeft()}
+            </p>
+          </div>
+
+          <div className="max-w-2xl mx-auto space-y-4">
+            <p className="text-xl text-gray-300">
+              Join our referral program and compete for a share of the $50,000 prize pool! 
+              The more friends you bring, the bigger your share of the prize.
+            </p>
+            
+            {referralCode ? (
+              <div className="p-6 bg-black/40 rounded-xl border border-cyber-primary/50">
+                <p className="text-lg text-gray-300 mb-2">Your Referral Code:</p>
+                <p className="text-3xl font-mono text-cyber-primary">{referralCode}</p>
+              </div>
+            ) : (
+              <Button 
+                onClick={generateReferralCode}
+                className="cyber-button text-lg py-6 px-8"
+              >
+                <Users className="mr-2 h-5 w-5" />
+                Generate Your Referral Code
+              </Button>
+            )}
+
+            <p className="text-sm text-gray-400">
+              Current Top Referrer: 324 referrals • Prize Pool Progress: $32,450 / $50,000
+            </p>
+          </div>
+        </div>
+      </section>
 
       {/* CTA Section */}
       <section className="container mx-auto px-4 py-20">

@@ -2,9 +2,9 @@ import { Trophy, Medal, Award } from "lucide-react";
 
 export const TopEarnersLeaderboard = () => {
   const topEarners = [
-    { rank: 1, amount: 257000, name: "Alex T." },
-    { rank: 2, amount: 191000, name: "Sarah M." },
-    { rank: 3, amount: 88000, name: "Michael R." },
+    { rank: 1, amount: 257432, name: "Maulable" },
+    { rank: 2, amount: 191765, name: "eyyoo" },
+    { rank: 3, amount: 88921, name: "PaulyD" },
   ];
 
   const getRankIcon = (rank: number) => {

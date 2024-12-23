@@ -46,7 +46,7 @@ export const ReferralCompetition = () => {
               <span className="text-cyber-primary font-bold min-w-[2rem]">#{index + 1}</span>
               <span className="text-gray-300">
                 {referrer.referrer_id === 'dfa4b29f-975d-4131-afa8-7452e7118343' 
-                  ? 'SolanaQM' 
+                  ? 'PaulyD' 
                   : `User ${referrer.referrer_id.slice(0, 6)}`}
               </span>
             </div>

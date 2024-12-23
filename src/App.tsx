@@ -8,7 +8,6 @@ import { supabase } from "@/integrations/supabase/client";
 import Index from "./pages/Index";
 import Landing from "./pages/Landing";
 import Documentation from "./pages/Documentation";
-import Dashboard from "./pages/Dashboard";
 
 const queryClient = new QueryClient();
 
@@ -22,7 +21,6 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Landing />} />
             <Route path="/documentation" element={<Documentation />} />
-            <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/app" element={<Index />} />
           </Routes>
         </BrowserRouter>

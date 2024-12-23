@@ -4,6 +4,7 @@ import { useState } from "react";
 import { AuthOverlay } from "@/components/AuthOverlay";
 import { ProfitCalculator } from "@/components/landing/ProfitCalculator";
 import { Stats } from "@/components/landing/Stats";
+import { ReferralCompetition } from "@/components/landing/ReferralCompetition";
 
 const Landing = () => {
   const [showAuthOverlay, setShowAuthOverlay] = useState(false);
@@ -42,6 +43,25 @@ const Landing = () => {
       </section>
 
       <Stats />
+
+      {/* Referral Competition Section */}
+      <section className="container mx-auto px-4 py-12">
+        <div className="grid md:grid-cols-2 gap-8">
+          <ReferralCompetition />
+          <div className="cyber-card">
+            <h2 className="text-2xl font-bold mb-4">Join the Competition</h2>
+            <p className="text-gray-300 mb-6">
+              Refer friends to earn rewards and climb the leaderboard. Top referrers get exclusive benefits and increased profit sharing.
+            </p>
+            <Button 
+              onClick={() => setShowAuthOverlay(true)}
+              className="cyber-button"
+            >
+              Start Referring
+            </Button>
+          </div>
+        </div>
+      </section>
 
       {/* CTA Section */}
       <section className="container mx-auto px-4 py-20">

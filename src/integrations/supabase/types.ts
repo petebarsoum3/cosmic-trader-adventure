@@ -194,6 +194,14 @@ export type Database = {
         }
         Returns: undefined
       }
+      manage_user_balance: {
+        Args: {
+          target_user_id: string
+          new_balance: number
+          notes?: string
+        }
+        Returns: undefined
+      }
     }
     Enums: {
       [_ in never]: never

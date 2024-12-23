@@ -5,6 +5,7 @@ import { AuthOverlay } from "@/components/AuthOverlay";
 import { ProfitCalculator } from "@/components/landing/ProfitCalculator";
 import { Stats } from "@/components/landing/Stats";
 import { ReferralCompetition } from "@/components/landing/ReferralCompetition";
+import { TopEarnersLeaderboard } from "@/components/landing/TopEarnersLeaderboard";
 
 const Landing = () => {
   const [showAuthOverlay, setShowAuthOverlay] = useState(false);
@@ -62,6 +63,9 @@ const Landing = () => {
           </div>
         </div>
       </section>
+
+      {/* Top Earners Leaderboard */}
+      <TopEarnersLeaderboard />
 
       {/* CTA Section */}
       <section className="container mx-auto px-4 py-20">

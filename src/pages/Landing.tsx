@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { Shield, Zap, Target, AlertTriangle, Timer, Trophy, Users } from "lucide-react";
 import { useState } from "react";
 import { AuthOverlay } from "@/components/AuthOverlay";
 import { ProfitCalculator } from "@/components/landing/ProfitCalculator";
@@ -14,12 +13,14 @@ const Landing = () => {
       {/* Navigation */}
       <nav className="container mx-auto px-4 py-4 flex justify-between items-center">
         <h1 className="text-2xl font-bold text-cyber-primary">SolanaQM</h1>
-        <Button 
-          onClick={() => setShowAuthOverlay(true)}
-          className="bg-cyber-accent hover:bg-cyber-accent/80"
-        >
-          Trading Bot
-        </Button>
+        <div className="space-x-4">
+          <Button 
+            onClick={() => setShowAuthOverlay(true)}
+            className="bg-cyber-accent hover:bg-cyber-accent/80"
+          >
+            Trading Bot
+          </Button>
+        </div>
       </nav>
 
       {/* Hero Section */}

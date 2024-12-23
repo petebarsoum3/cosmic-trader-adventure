@@ -23,13 +23,13 @@ const Dashboard = () => {
     trades: [
       {
         id: '1',
-        pair: 'BTC/USDT',
-        type: 'buy',
-        amount: 0.1,
-        price: 45000,
-        timestamp: new Date().toISOString(),
-        status: 'completed',
-        profit: 100
+        symbol: 'BTC/USDT',
+        side: 'long' as const,
+        entryPrice: 45000,
+        leverage: 1,
+        size: 0.1,
+        pnl: 100,
+        timestamp: Date.now()
       }
     ]
   };

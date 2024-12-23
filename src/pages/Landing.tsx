@@ -13,14 +13,6 @@ const Landing = () => {
       {/* Navigation */}
       <nav className="container mx-auto px-4 py-4 flex justify-between items-center">
         <h1 className="text-2xl font-bold text-cyber-primary">SolanaQM</h1>
-        <div className="space-x-4">
-          <Button 
-            onClick={() => setShowAuthOverlay(true)}
-            className="bg-cyber-accent hover:bg-cyber-accent/80"
-          >
-            Trading Bot
-          </Button>
-        </div>
       </nav>
 
       {/* Hero Section */}

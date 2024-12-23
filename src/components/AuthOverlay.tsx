@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "./ui/button";
 import { X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useToast } from "@/hooks/use-toast";
 
 interface AuthOverlayProps {
   isOpen: boolean;
@@ -14,6 +15,22 @@ interface AuthOverlayProps {
 
 export function AuthOverlay({ isOpen, onClose, defaultView = "sign_up" }: AuthOverlayProps) {
   const navigate = useNavigate();
+  const { toast } = useToast();
+
+  useEffect(() => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_IN') {
+        toast({
+          title: "Welcome aboard! 🚀",
+          description: "Your account has been created successfully.",
+        });
+        navigate('/app');
+        onClose();
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, [navigate, onClose, toast]);
 
   if (!isOpen) return null;
 

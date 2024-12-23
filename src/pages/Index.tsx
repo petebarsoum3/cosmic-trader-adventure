@@ -7,7 +7,7 @@ import { AuthOverlay } from "@/components/AuthOverlay";
 import { Features } from "@/components/landing/Features";
 import { ProfitCalculator } from "@/components/landing/ProfitCalculator";
 import { TradingStats } from "@/components/landing/TradingStats";
-import { PerformanceGraph } from "@/components/landing/PerformanceGraph";
+import { TradingSimulator } from "@/components/landing/TradingSimulator";
 
 const Index = () => {
   const [showAuthOverlay, setShowAuthOverlay] = useState(false);
@@ -57,9 +57,9 @@ const Index = () => {
         </div>
       </motion.div>
 
-      {/* Performance Graph */}
+      {/* Trading Simulator */}
       <div className="container py-10">
-        <PerformanceGraph />
+        <TradingSimulator />
       </div>
 
       {/* Stats Section */}

@@ -1,54 +1,18 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Slider } from "@/components/ui/slider";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { useSession } from "@supabase/auth-helpers-react";
 import { AuthOverlay } from "@/components/AuthOverlay";
+import { Features } from "@/components/landing/Features";
+import { ProfitCalculator } from "@/components/landing/ProfitCalculator";
+import { TradingStats } from "@/components/landing/TradingStats";
+import { PerformanceGraph } from "@/components/landing/PerformanceGraph";
 
 const Index = () => {
-  const [investment, setInvestment] = useState<number>(1000);
-  const [leverage, setLeverage] = useState<number>(1);
   const [showAuthOverlay, setShowAuthOverlay] = useState(false);
   const session = useSession();
   const navigate = useNavigate();
-
-  const calculateProfit = () => {
-    const dailyReturn = 0.03; // 3% daily return
-    const monthlyReturn = (investment * leverage * dailyReturn * 30).toFixed(2);
-    return monthlyReturn;
-  };
-
-  const stats = [
-    { value: 15482, label: "Active Trades" },
-    { value: 892341, label: "Total Volume" },
-    { value: 3219, label: "Active Users" },
-    { value: 99, label: "Success Rate" },
-  ];
-
-  const features = [
-    {
-      icon: "💎",
-      title: "AI-Powered Trading",
-      description: "Advanced algorithms maximize your profits",
-    },
-    {
-      icon: "🚀",
-      title: "Lightning Fast",
-      description: "Execute trades in milliseconds",
-    },
-    {
-      icon: "🛡️",
-      title: "Risk Management",
-      description: "Smart stop-loss and take-profit",
-    },
-    {
-      icon: "📊",
-      title: "Real-time Analytics",
-      description: "Track your performance live",
-    },
-  ];
 
   const handleGetStarted = () => {
     if (!session) {
@@ -89,90 +53,25 @@ const Index = () => {
             </Button>
           </motion.div>
 
-          <motion.div
-            initial={{ x: 100, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            transition={{ delay: 0.4 }}
-            className="cyber-card"
-          >
-            <h3 className="text-2xl font-bold mb-6 text-cyber-primary">Profit Calculator</h3>
-            <div className="space-y-6">
-              <div>
-                <label className="block text-sm mb-2">Investment Amount (USDT)</label>
-                <Input
-                  type="number"
-                  value={investment}
-                  onChange={(e) => setInvestment(Number(e.target.value))}
-                  className="cyber-input"
-                />
-              </div>
-              <div>
-                <label className="block text-sm mb-2">Leverage (1-10x)</label>
-                <Slider
-                  value={[leverage]}
-                  onValueChange={(value) => setLeverage(value[0])}
-                  min={1}
-                  max={10}
-                  step={1}
-                  className="cyber-slider"
-                />
-                <span className="block text-right text-sm mt-1">{leverage}x</span>
-              </div>
-              <div className="p-4 rounded-lg bg-black/30 border border-cyber-primary/20">
-                <p className="text-sm text-gray-400">Estimated Monthly Profit:</p>
-                <p className="text-3xl font-bold text-cyber-primary">${calculateProfit()}</p>
-                <p className="text-xs text-gray-500 mt-2">Based on historical performance</p>
-              </div>
-            </div>
-          </motion.div>
+          <ProfitCalculator />
         </div>
       </motion.div>
+
+      {/* Performance Graph */}
+      <div className="container py-10">
+        <PerformanceGraph />
+      </div>
 
       {/* Stats Section */}
       <div className="bg-black/30 py-20">
         <div className="container">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {stats.map((stat, index) => (
-              <motion.div
-                key={index}
-                initial={{ y: 50, opacity: 0 }}
-                whileInView={{ y: 0, opacity: 1 }}
-                transition={{ delay: index * 0.1 }}
-                className="cyber-card text-center"
-              >
-                <div className="text-3xl font-bold text-cyber-primary mb-2">
-                  {stat.value.toLocaleString()}
-                </div>
-                <div className="text-sm text-gray-400">{stat.label}</div>
-              </motion.div>
-            ))}
-          </div>
+          <TradingStats />
         </div>
       </div>
 
       {/* Features Section */}
-      <div className="container py-20">
-        <h2 className="text-3xl font-bold text-center mb-12 text-cyber-primary">
-          Advanced Trading Features
-        </h2>
-        <div className="grid md:grid-cols-4 gap-6">
-          {features.map((feature, index) => (
-            <motion.div
-              key={index}
-              initial={{ scale: 0.9, opacity: 0 }}
-              whileInView={{ scale: 1, opacity: 1 }}
-              whileHover={{ y: -5 }}
-              transition={{ delay: index * 0.1 }}
-              className="cyber-card text-center"
-            >
-              <div className="text-4xl mb-4">{feature.icon}</div>
-              <h3 className="text-xl font-bold mb-2 text-cyber-primary">
-                {feature.title}
-              </h3>
-              <p className="text-gray-400">{feature.description}</p>
-            </motion.div>
-          ))}
-        </div>
+      <div className="container">
+        <Features />
       </div>
 
       {/* CTA Section */}

@@ -3,7 +3,7 @@ import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
 import { motion } from "framer-motion";
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
-import { Calculator } from "lucide-react";
+import { Calculator, DollarSign, TrendingUp } from "lucide-react";
 
 export function ProfitCalculator() {
   const [investment, setInvestment] = useState<number>(1000);
@@ -11,7 +11,7 @@ export function ProfitCalculator() {
   const [hourlyProfits, setHourlyProfits] = useState<any[]>([]);
 
   useEffect(() => {
-    const hourlyRate = 0.17; // 17% per hour
+    const hourlyRate = 0.004; // 0.4% per hour (more realistic)
     const hours = Array.from({ length: 24 }, (_, i) => i + 1);
     
     const profits = hours.map(hour => {
@@ -34,7 +34,7 @@ export function ProfitCalculator() {
     >
       <div className="flex items-center gap-2 mb-6">
         <Calculator className="w-6 h-6 text-cyber-primary" />
-        <h3 className="text-2xl font-bold">Profit Calculator</h3>
+        <h3 className="text-2xl font-bold">Profit Simulator</h3>
       </div>
 
       <div className="space-y-6">
@@ -95,14 +95,20 @@ export function ProfitCalculator() {
 
         <div className="grid grid-cols-2 gap-4">
           <div className="p-4 rounded-lg bg-black/30 border border-cyber-primary/20">
-            <p className="text-sm text-gray-400">Hourly Return</p>
-            <p className="text-2xl font-bold text-cyber-primary">17%</p>
+            <p className="text-sm text-gray-400">Current Balance</p>
+            <div className="flex items-center gap-2">
+              <DollarSign className="w-4 h-4 text-cyber-primary" />
+              <p className="text-2xl font-bold text-cyber-primary">{investment.toLocaleString()}</p>
+            </div>
           </div>
           <div className="p-4 rounded-lg bg-black/30 border border-cyber-primary/20">
-            <p className="text-sm text-gray-400">24h Potential</p>
-            <p className="text-2xl font-bold text-cyber-primary">
-              ${hourlyProfits[23]?.profit.toLocaleString() || 0}
-            </p>
+            <p className="text-sm text-gray-400">Projected Growth</p>
+            <div className="flex items-center gap-2">
+              <TrendingUp className="w-4 h-4 text-cyber-primary" />
+              <p className="text-2xl font-bold text-cyber-primary">
+                ${(hourlyProfits[0]?.profit - investment).toFixed(2)}
+              </p>
+            </div>
           </div>
         </div>
       </div>

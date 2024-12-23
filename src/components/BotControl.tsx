@@ -7,12 +7,19 @@ import { useToast } from "@/hooks/use-toast";
 
 interface BotControlProps {
   allocatedFunds: number;
+  balance: number; // Add balance prop
   onAllocate: (amount: number) => void;
   onStart: () => void;
   onStop: () => void;
 }
 
-export function BotControl({ allocatedFunds, onAllocate, onStart, onStop }: BotControlProps) {
+export function BotControl({ 
+  allocatedFunds, 
+  balance, 
+  onAllocate, 
+  onStart, 
+  onStop 
+}: BotControlProps) {
   const [isRunning, setIsRunning] = useState(false);
   const [leverage, setLeverage] = useState(1);
   const [dailyProfit, setDailyProfit] = useState(0);
@@ -43,6 +50,18 @@ export function BotControl({ allocatedFunds, onAllocate, onStart, onStop }: BotC
     onStop();
   };
 
+  const handleAllocate = (value: number) => {
+    if (value > balance) {
+      toast({
+        title: "Insufficient Balance",
+        description: "You cannot allocate more funds than your available balance",
+        variant: "destructive",
+      });
+      return;
+    }
+    onAllocate(value);
+  };
+
   return (
     <div className="cyber-card">
       <div className="flex items-center justify-between mb-4">
@@ -54,12 +73,15 @@ export function BotControl({ allocatedFunds, onAllocate, onStart, onStop }: BotC
       </div>
       <div className="space-y-4">
         <div className="space-y-2">
-          <label className="text-sm text-muted-foreground">Allocated Funds</label>
+          <label className="text-sm text-muted-foreground">
+            Allocated Funds (Max: ${balance.toFixed(2)})
+          </label>
           <Input
             type="number"
             value={allocatedFunds}
-            onChange={(e) => onAllocate(Number(e.target.value))}
+            onChange={(e) => handleAllocate(Number(e.target.value))}
             className="cyber-input"
+            max={balance}
           />
         </div>
         <div className="space-y-2">

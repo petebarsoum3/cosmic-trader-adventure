@@ -118,6 +118,7 @@ const Index = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
         <BotControl
           allocatedFunds={allocatedFunds}
+          balance={balance}
           onAllocate={(amount) => handleAction(() => setAllocatedFunds(amount))}
           onStart={() => handleAction(handleStartBot)}
           onStop={() => handleAction(handleStopBot)}

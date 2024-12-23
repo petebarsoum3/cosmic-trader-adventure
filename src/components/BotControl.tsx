@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
 import { Power, Rocket } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 interface BotControlProps {
   allocatedFunds: number;
@@ -15,6 +16,7 @@ export function BotControl({ allocatedFunds, onAllocate, onStart, onStop }: BotC
   const [isRunning, setIsRunning] = useState(false);
   const [leverage, setLeverage] = useState(1);
   const [dailyProfit, setDailyProfit] = useState(0);
+  const { toast } = useToast();
 
   useEffect(() => {
     // Calculate estimated daily profit based on allocated funds and leverage
@@ -25,6 +27,11 @@ export function BotControl({ allocatedFunds, onAllocate, onStart, onStop }: BotC
 
   const handleStart = () => {
     if (allocatedFunds <= 0) {
+      toast({
+        title: "Insufficient Funds",
+        description: "Please allocate funds before starting the bot",
+        variant: "destructive",
+      });
       return;
     }
     setIsRunning(true);

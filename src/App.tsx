@@ -6,6 +6,9 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { SessionContextProvider } from '@supabase/auth-helpers-react';
 import { supabase } from "@/integrations/supabase/client";
 import Index from "./pages/Index";
+import Landing from "./pages/Landing";
+import Documentation from "./pages/Documentation";
+import Dashboard from "./pages/Dashboard";
 
 const queryClient = new QueryClient();
 
@@ -17,7 +20,10 @@ const App = () => (
         <Sonner />
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<Index />} />
+            <Route path="/" element={<Landing />} />
+            <Route path="/documentation" element={<Documentation />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/app" element={<Index />} />
           </Routes>
         </BrowserRouter>
       </TooltipProvider>

@@ -9,30 +9,6 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      referrals: {
-        Row: {
-          created_at: string | null
-          custom_code: string
-          id: string
-          referred_id: string
-          referrer_id: string
-        }
-        Insert: {
-          created_at?: string | null
-          custom_code: string
-          id?: string
-          referred_id: string
-          referrer_id: string
-        }
-        Update: {
-          created_at?: string | null
-          custom_code?: string
-          id?: string
-          referred_id?: string
-          referrer_id?: string
-        }
-        Relationships: []
-      }
       support_messages: {
         Row: {
           created_at: string | null
@@ -164,15 +140,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      get_top_referrers: {
-        Args: {
-          limit_count: number
-        }
-        Returns: {
-          referrer_id: string
-          referral_count: number
-        }[]
-      }
+      [_ in never]: never
     }
     Enums: {
       [_ in never]: never

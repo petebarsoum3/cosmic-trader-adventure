@@ -1,102 +1,116 @@
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { motion } from "framer-motion";
-import { useNavigate } from "react-router-dom";
-import { useSession } from "@supabase/auth-helpers-react";
+import { useEffect, useRef, useState } from "react";
+import { WalletCard } from "@/components/WalletCard";
+import { TraderLevel } from "@/components/TraderLevel";
+import { TradeHistory } from "@/components/TradeHistory";
+import { BotControl } from "@/components/BotControl";
+import { WalletActions } from "@/components/WalletActions";
+import { SupportTickets } from "@/components/SupportTickets";
+import { useToast } from "@/hooks/use-toast";
 import { AuthOverlay } from "@/components/AuthOverlay";
-import { Features } from "@/components/landing/Features";
-import { ProfitCalculator } from "@/components/landing/ProfitCalculator";
-import { TradingStats } from "@/components/landing/TradingStats";
-import { ReferralLeaderboard } from "@/components/landing/ReferralLeaderboard";
+import { supabase } from "@/integrations/supabase/client";
 
 const Index = () => {
+  const worker = useRef<Worker>();
+  const { toast } = useToast();
+  const [balance, setBalance] = useState(0);
+  const [allocatedFunds, setAllocatedFunds] = useState(0);
+  const [equity, setEquity] = useState(0);
   const [showAuthOverlay, setShowAuthOverlay] = useState(false);
-  const session = useSession();
-  const navigate = useNavigate();
+  const [session, setSession] = useState<any>(null);
 
-  const handleGetStarted = () => {
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+    });
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    worker.current = new Worker(
+      new URL('../workers/trading.worker.ts', import.meta.url),
+      { type: 'module' }
+    );
+
+    worker.current.onmessage = (e) => {
+      const { type, trade } = e.data;
+      switch (type) {
+        case 'NEW_TRADE':
+          // Add trade to history
+          break;
+        case 'BOT_STOPPED':
+          toast({
+            title: "Bot Stopped",
+            description: "Trading bot has been stopped successfully",
+          });
+          break;
+        case 'BOT_STARTED':
+          toast({
+            title: "Bot Started",
+            description: "Trading bot is now running",
+          });
+          break;
+      }
+    };
+
+    return () => worker.current?.terminate();
+  }, []);
+
+  const handleAction = (action: () => void) => {
     if (!session) {
       setShowAuthOverlay(true);
-    } else {
-      navigate("/dashboard");
+      return;
     }
+    action();
+  };
+
+  const handleStartBot = () => {
+    worker.current?.postMessage({ type: 'START' });
+  };
+
+  const handleStopBot = () => {
+    worker.current?.postMessage({ type: 'STOP' });
   };
 
   return (
-    <div className="min-h-screen bg-cyber-background text-foreground overflow-hidden">
-      {/* Hero Section */}
-      <motion.div 
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="container py-20 relative"
-      >
-        <div className="absolute inset-0 bg-gradient-to-r from-cyber-primary/10 to-cyber-secondary/10 blur-3xl" />
-        
-        <div className="grid md:grid-cols-2 gap-12 items-center relative">
-          <motion.div
-            initial={{ x: -100, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            transition={{ delay: 0.2 }}
-            className="space-y-6"
-          >
-            <h1 className="text-5xl font-bold bg-gradient-to-r from-cyber-primary to-cyber-secondary bg-clip-text text-transparent">
-              SolanaQM
-            </h1>
-            <p className="text-xl text-gray-300">
-              Advanced AI-powered trading bot that maximizes your profits in the Solana ecosystem
-            </p>
-            <Button 
-              onClick={handleGetStarted}
-              className="cyber-button text-lg px-8 py-4"
-            >
-              Start Trading Now
-            </Button>
-          </motion.div>
+    <div className="container py-8 min-h-screen">
+      <div className="flex items-center justify-between mb-8">
+        <h1 className="text-2xl font-bold text-cyber-primary">SolanaQM</h1>
+      </div>
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <WalletCard
+          balance={balance}
+          allocatedFunds={allocatedFunds}
+          equity={equity}
+        />
+        <TraderLevel level={1} xp={0} />
+      </div>
+      
+      <WalletActions
+        balance={balance}
+        onBalanceChange={setBalance}
+      />
 
-          <ProfitCalculator />
-        </div>
-      </motion.div>
-
-      {/* Stats Section */}
-      <div className="bg-black/30 py-20">
-        <div className="container">
-          <TradingStats />
-        </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+        <BotControl
+          allocatedFunds={allocatedFunds}
+          onAllocate={(amount) => handleAction(() => setAllocatedFunds(amount))}
+          onStart={() => handleAction(handleStartBot)}
+          onStop={() => handleAction(handleStopBot)}
+        />
+        <TradeHistory trades={[]} />
       </div>
 
-      {/* Referral Section */}
-      <div className="py-20">
-        <div className="container max-w-2xl mx-auto">
-          <ReferralLeaderboard />
-        </div>
+      <div className="mt-6">
+        <SupportTickets />
       </div>
-
-      {/* Features Section */}
-      <div className="container py-20">
-        <Features />
-      </div>
-
-      {/* CTA Section */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        className="container py-20"
-      >
-        <div className="cyber-card text-center max-w-2xl mx-auto">
-          <h2 className="text-3xl font-bold mb-4 text-cyber-primary">
-            Ready to Start Trading?
-          </h2>
-          <p className="text-gray-400 mb-8">
-            Join thousands of traders who trust our AI-powered bot
-          </p>
-          <Button 
-            onClick={handleGetStarted}
-            className="cyber-button text-lg px-8 py-4"
-          >
-            Get Started Now
-          </Button>
-        </div>
-      </motion.div>
 
       <AuthOverlay 
         isOpen={showAuthOverlay} 

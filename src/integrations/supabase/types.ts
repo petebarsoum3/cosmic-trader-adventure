@@ -77,27 +77,36 @@ export type Database = {
       }
       support_tickets: {
         Row: {
+          assigned_to: string | null
           created_at: string | null
           description: string
           id: string
+          priority: string | null
+          resolution_notes: string | null
           status: string
           title: string
           updated_at: string | null
           user_id: string
         }
         Insert: {
+          assigned_to?: string | null
           created_at?: string | null
           description: string
           id?: string
+          priority?: string | null
+          resolution_notes?: string | null
           status?: string
           title: string
           updated_at?: string | null
           user_id: string
         }
         Update: {
+          assigned_to?: string | null
           created_at?: string | null
           description?: string
           id?: string
+          priority?: string | null
+          resolution_notes?: string | null
           status?: string
           title?: string
           updated_at?: string | null
@@ -110,6 +119,8 @@ export type Database = {
           balance: number
           created_at: string | null
           id: string
+          processed_by: string | null
+          processing_notes: string | null
           updated_at: string | null
           user_id: string
         }
@@ -117,6 +128,8 @@ export type Database = {
           balance?: number
           created_at?: string | null
           id?: string
+          processed_by?: string | null
+          processing_notes?: string | null
           updated_at?: string | null
           user_id: string
         }
@@ -124,6 +137,8 @@ export type Database = {
           balance?: number
           created_at?: string | null
           id?: string
+          processed_by?: string | null
+          processing_notes?: string | null
           updated_at?: string | null
           user_id?: string
         }

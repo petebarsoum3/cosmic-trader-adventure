@@ -7,7 +7,6 @@ import { AuthOverlay } from "@/components/AuthOverlay";
 import { Features } from "@/components/landing/Features";
 import { ProfitCalculator } from "@/components/landing/ProfitCalculator";
 import { TradingStats } from "@/components/landing/TradingStats";
-import { LatestReleaseCoins } from "@/components/landing/LatestReleaseCoins";
 import { ReferralLeaderboard } from "@/components/landing/ReferralLeaderboard";
 
 const Index = () => {
@@ -58,18 +57,17 @@ const Index = () => {
         </div>
       </motion.div>
 
-      {/* Latest Release Coins */}
-      <div className="container py-10">
-        <LatestReleaseCoins />
-      </div>
-
-      {/* Stats and Leaderboard Section */}
+      {/* Stats Section */}
       <div className="bg-black/30 py-20">
         <div className="container">
-          <div className="grid md:grid-cols-2 gap-8">
-            <TradingStats />
-            <ReferralLeaderboard />
-          </div>
+          <TradingStats />
+        </div>
+      </div>
+
+      {/* Referral Section */}
+      <div className="py-20">
+        <div className="container max-w-2xl mx-auto">
+          <ReferralLeaderboard />
         </div>
       </div>
 

@@ -95,18 +95,18 @@ export function ProfitCalculator() {
 
         <div className="grid grid-cols-2 gap-4">
           <div className="p-4 rounded-lg bg-black/30 border border-cyber-primary/20">
-            <p className="text-sm text-gray-400">Current Balance</p>
+            <p className="text-sm text-gray-400">Initial Investment</p>
             <div className="flex items-center gap-2">
               <DollarSign className="w-4 h-4 text-cyber-primary" />
               <p className="text-2xl font-bold text-cyber-primary">{investment.toLocaleString()}</p>
             </div>
           </div>
           <div className="p-4 rounded-lg bg-black/30 border border-cyber-primary/20">
-            <p className="text-sm text-gray-400">Projected Growth</p>
+            <p className="text-sm text-gray-400">Daily Growth</p>
             <div className="flex items-center gap-2">
               <TrendingUp className="w-4 h-4 text-cyber-primary" />
               <p className="text-2xl font-bold text-cyber-primary">
-                ${(hourlyProfits[0]?.profit - investment).toFixed(2)}
+                ${(hourlyProfits[23]?.profit - investment).toFixed(2)}
               </p>
             </div>
           </div>

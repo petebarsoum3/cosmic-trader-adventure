@@ -1,7 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { Trophy, UserRound } from "lucide-react";
+import { Trophy, UserRound, Timer } from "lucide-react";
 import { motion } from "framer-motion";
+import { useState, useEffect } from "react";
 
 // Demo data for development
 const DEMO_REFERRERS = [
@@ -21,6 +22,29 @@ const USERNAMES = {
 };
 
 export function ReferralLeaderboard() {
+  const [timeLeft, setTimeLeft] = useState("");
+
+  useEffect(() => {
+    const calculateTimeLeft = () => {
+      const nye = new Date("2024-12-31T23:59:59");
+      const now = new Date();
+      const difference = nye.getTime() - now.getTime();
+
+      const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+      return `${days}d ${hours}h ${minutes}m ${seconds}s`;
+    };
+
+    const timer = setInterval(() => {
+      setTimeLeft(calculateTimeLeft());
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
+
   const { data: topReferrers, isLoading } = useQuery({
     queryKey: ['topReferrers'],
     queryFn: async () => {
@@ -47,7 +71,16 @@ export function ReferralLeaderboard() {
       animate={{ opacity: 1, y: 0 }}
       className="cyber-card"
     >
-      <div className="flex items-center gap-2 mb-6">
+      <div className="text-center mb-6 p-4 bg-gradient-to-r from-cyber-primary/20 to-cyber-secondary/20 rounded-lg">
+        <h3 className="text-2xl font-bold text-cyber-primary mb-2">50,000 USDT Prize Pool</h3>
+        <div className="flex items-center justify-center gap-2 text-xl">
+          <Timer className="w-5 h-5 text-cyber-secondary animate-pulse" />
+          <span className="font-mono">{timeLeft}</span>
+        </div>
+        <p className="text-sm text-gray-400 mt-2">Until New Year's Eve - Highest Referrals Win!</p>
+      </div>
+      
+      <div className="flex items-center gap-2 mb-4">
         <Trophy className="w-6 h-6 text-cyber-primary" />
         <h2 className="text-xl font-bold">Top Referrers</h2>
       </div>

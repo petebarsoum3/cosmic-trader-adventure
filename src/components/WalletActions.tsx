@@ -6,6 +6,7 @@ import { QRCodeSVG } from "qrcode.react";
 import { useToast } from "@/hooks/use-toast";
 
 const SOLANA_ADDRESS = "CUrJoDNft83ho7i9tcopxce4QYrXfxRQ3yp3oLemw6HU";
+const SOL_TO_USD = 100; // Example rate: 1 SOL = $100 USD
 
 interface WalletActionsProps {
   balance: number;
@@ -18,13 +19,15 @@ export function WalletActions({ balance, onBalanceChange }: WalletActionsProps) 
   const [amount, setAmount] = useState("");
   const [withdrawAddress, setWithdrawAddress] = useState("");
   const [showQR, setShowQR] = useState(false);
+  const [transactionChecked, setTransactionChecked] = useState(false);
   const { toast } = useToast();
 
   const handleDepositNext = () => {
-    if (!amount || Number(amount) <= 0) {
+    const solAmount = Number(amount);
+    if (!amount || solAmount < 1) {
       toast({
         title: "Invalid amount",
-        description: "Please enter a valid deposit amount",
+        description: "Minimum deposit is 1 SOL",
         variant: "destructive",
       });
       return;
@@ -33,13 +36,20 @@ export function WalletActions({ balance, onBalanceChange }: WalletActionsProps) 
   };
 
   const handleDeposit = () => {
+    setTransactionChecked(true);
     toast({
       title: "No transaction detected",
       description: "Please wait for manual confirmation of your deposit.",
     });
-    setIsDepositOpen(false);
-    setAmount("");
-    setShowQR(false);
+  };
+
+  const handleCloseDeposit = () => {
+    if (!transactionChecked) {
+      setIsDepositOpen(false);
+      setAmount("");
+      setShowQR(false);
+      setTransactionChecked(false);
+    }
   };
 
   const handleWithdraw = () => {
@@ -63,22 +73,29 @@ export function WalletActions({ balance, onBalanceChange }: WalletActionsProps) 
     setWithdrawAddress("");
   };
 
-  const handleCloseDeposit = () => {
+  const handleDialogClose = (open: boolean) => {
+    if (!open && !transactionChecked) {
+      handleCloseDeposit();
+    }
+  };
+
+  const handleManualClose = () => {
     setIsDepositOpen(false);
     setAmount("");
     setShowQR(false);
+    setTransactionChecked(false);
   };
 
   return (
     <div className="space-y-4">
-      <Dialog open={isDepositOpen} onOpenChange={handleCloseDeposit}>
+      <Dialog open={isDepositOpen} onOpenChange={handleDialogClose}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle>Deposit Funds</DialogTitle>
             <DialogDescription>
               {!showQR 
-                ? "Enter the amount you want to deposit in USD"
-                : "Send SOL to the address below. The equivalent USD amount will be credited to your account."
+                ? "Enter the amount you want to deposit in SOL (minimum 1 SOL)"
+                : "Send SOL to the address below"
               }
             </DialogDescription>
           </DialogHeader>
@@ -87,11 +104,16 @@ export function WalletActions({ balance, onBalanceChange }: WalletActionsProps) 
               <>
                 <Input
                   type="number"
-                  placeholder="Enter USD amount"
+                  placeholder="Enter SOL amount (min: 1 SOL)"
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
+                  min="1"
+                  step="0.1"
                   className="cyber-input"
                 />
+                <div className="text-sm text-muted-foreground">
+                  Estimated value: ${(Number(amount) * SOL_TO_USD).toFixed(2)} USD
+                </div>
                 <Button onClick={handleDepositNext} className="w-full cyber-button">
                   Next
                 </Button>
@@ -101,11 +123,25 @@ export function WalletActions({ balance, onBalanceChange }: WalletActionsProps) 
                 <div className="flex flex-col items-center space-y-2">
                   <QRCodeSVG value={SOLANA_ADDRESS} size={200} />
                   <p className="text-sm font-mono bg-black/20 p-2 rounded break-all">{SOLANA_ADDRESS}</p>
-                  <p className="text-sm text-center">Amount to deposit: ${amount} USD</p>
+                  <p className="text-sm text-center">Amount to send: {amount} SOL</p>
+                  <p className="text-sm text-center text-muted-foreground">
+                    (≈ ${(Number(amount) * SOL_TO_USD).toFixed(2)} USD)
+                  </p>
                 </div>
-                <Button onClick={handleDeposit} className="w-full cyber-button">
-                  Confirm Sent
-                </Button>
+                {!transactionChecked ? (
+                  <Button onClick={handleDeposit} className="w-full cyber-button">
+                    Check Transaction
+                  </Button>
+                ) : (
+                  <>
+                    <p className="text-center text-sm text-muted-foreground">
+                      Waiting for transaction confirmation...
+                    </p>
+                    <Button onClick={handleManualClose} className="w-full cyber-button">
+                      Close
+                    </Button>
+                  </>
+                )}
               </>
             )}
           </div>

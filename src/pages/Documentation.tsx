@@ -1,32 +1,45 @@
+import { useState } from "react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Button } from "@/components/ui/button";
+import { AuthOverlay } from "@/components/AuthOverlay";
 
 const Documentation = () => {
+  const [showAuth, setShowAuth] = useState(false);
+
   return (
     <div className="min-h-screen bg-cyber-background py-12">
       <div className="container mx-auto px-4">
-        <h1 className="text-4xl font-bold mb-8 bg-gradient-to-r from-cyber-primary to-cyber-secondary bg-clip-text text-transparent">
-          Advanced Documentation & Mathematical Proofs
-        </h1>
+        <div className="flex items-center justify-between mb-8">
+          <h1 className="text-5xl font-bold bg-gradient-to-r from-cyber-primary via-cyber-secondary to-cyber-accent bg-clip-text text-transparent">
+            Advanced Documentation
+          </h1>
+          <Button 
+            onClick={() => setShowAuth(true)}
+            className="cyber-button text-lg px-8 py-6 animate-pulse hover:animate-none"
+          >
+            Launch Now
+          </Button>
+        </div>
 
         <div className="grid gap-8 md:grid-cols-[300px,1fr]">
           {/* Navigation */}
-          <aside className="cyber-card h-fit">
+          <aside className="cyber-card h-fit backdrop-blur-xl border-cyber-primary/20">
             <ScrollArea className="h-[calc(100vh-200px)]">
               <nav className="space-y-2 p-4">
-                <a href="#introduction" className="block p-2 hover:bg-white/5 rounded">
+                <a href="#introduction" className="block p-2 hover:bg-white/5 rounded transition-colors duration-200">
                   Introduction & Objectives
                 </a>
-                <a href="#theory" className="block p-2 hover:bg-white/5 rounded">
+                <a href="#theory" className="block p-2 hover:bg-white/5 rounded transition-colors duration-200">
                   Theoretical Framework
                 </a>
-                <a href="#quantum" className="block p-2 hover:bg-white/5 rounded">
+                <a href="#quantum" className="block p-2 hover:bg-white/5 rounded transition-colors duration-200">
                   Quantum-Inspired Models
                 </a>
-                <a href="#statistical" className="block p-2 hover:bg-white/5 rounded">
+                <a href="#statistical" className="block p-2 hover:bg-white/5 rounded transition-colors duration-200">
                   Statistical Foundations
                 </a>
-                <a href="#profitability" className="block p-2 hover:bg-white/5 rounded">
+                <a href="#profitability" className="block p-2 hover:bg-white/5 rounded transition-colors duration-200">
                   Profitability Analysis
                 </a>
               </nav>
@@ -35,9 +48,11 @@ const Documentation = () => {
 
           {/* Content */}
           <div className="space-y-8">
-            <section id="introduction" className="cyber-card">
-              <h2 className="text-2xl font-bold mb-4">Introduction & Objectives</h2>
-              <div className="space-y-4 text-gray-300">
+            <section id="introduction" className="cyber-card backdrop-blur-xl border-cyber-primary/20">
+              <h2 className="text-2xl font-bold mb-4 bg-gradient-to-r from-cyber-primary to-cyber-secondary bg-clip-text text-transparent">
+                Introduction & Objectives
+              </h2>
+              <div className="space-y-4 text-gray-300 leading-relaxed">
                 <p>
                   Welcome to the fully expanded advanced documentation for our trading system. This resource provides
                   a deep, multidimensional, and rigorous dive into the theoretical, computational, empirical, and
@@ -112,6 +127,12 @@ const Documentation = () => {
           </div>
         </div>
       </div>
+      
+      <AuthOverlay 
+        isOpen={showAuth} 
+        onClose={() => setShowAuth(false)} 
+        defaultView="sign_up"
+      />
     </div>
   );
 };
